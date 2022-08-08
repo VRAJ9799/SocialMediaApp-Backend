@@ -19,6 +19,7 @@ spring:
   data:
     mongodb:
       uri: ${mongo_uri}
+      database: ${mongo_database}
   application:
     name: ${application_name}
 
