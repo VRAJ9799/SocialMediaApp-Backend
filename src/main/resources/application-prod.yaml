@@ -1,0 +1,60 @@
+spring:
+  datasource:
+    url: jdbc://${DATABASE_URL}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    generate-ddl: true
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+    hibernate:
+      ddl-auto: update
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: ${max_file_size}
+      max-request-size: ${max_request_size}
+  data:
+    mongodb:
+      uri: ${mongo_uri}
+  application:
+    name: ${application_name}
+
+jwt:
+  secret_key: ${jwt_secret}
+  expire_in: ${jwt_expire_in}
+
+user:
+  default_role_id: ${default_role}
+  locked_out_attempt: ${locked_out_attempt}
+  locked_out_time: ${locked_out_time}
+  refresh_token_expire_in: ${refresh_token_expire_in}
+  token_expire_in: ${token_expire_in}
+
+logging:
+  level:
+    org:
+      hibernate:
+        type: info
+      springframework:
+        data:
+          mongodb:
+            core:
+              org.springframework.data.mongodb.core.MongoTemplate: debug
+
+cloudinary:
+  cloud_name: ${cloudinary_cloud_name}
+  api_key: ${cloudinary_api_key}
+  api_secret: ${cloudinary_api_secret}
+
+cookie:
+  secure: true
+  http_only: true
+
+sendgrid:
+  api-key: ${sendgrid_api_key}
+
+email-templates:
+  emailVerification: ${email_verification_template_id}
