@@ -25,8 +25,9 @@ public class InitialData implements CommandLineRunner {
     }
 
     private void insertRoles() {
-        Page<Role> roles = _roleService.getAllRoles(new Paging<Role>());
-        if (roles.isEmpty()) {
+        Page<Role> roles = _roleService.getAllRoles(new Paging<>());
+        log.info("{} already exists.", roles.getContent().size());
+        if (!roles.hasContent()) {
             log.info("Seeding Roles...");
             _roleService.createRole(new AddOrUpdateRole(Constants.ROLE_USER));
             _roleService.createRole(new AddOrUpdateRole(Constants.ROLE_ADMIN));

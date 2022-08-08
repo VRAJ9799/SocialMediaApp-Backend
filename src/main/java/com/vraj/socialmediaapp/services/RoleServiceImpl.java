@@ -44,7 +44,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role createRole(AddOrUpdateRole addOrUpdateRole) {
-        String roleName = "ROLE_" + addOrUpdateRole.getName().toUpperCase();
+        String roleName = Constants.ROLE_PREFIX + addOrUpdateRole.getName().toUpperCase();
         boolean roleExists = _roleRepository.existsByNameIgnoreCase(roleName);
         if (roleExists) {
             log.error("Role with name {} already exists.", roleName);
