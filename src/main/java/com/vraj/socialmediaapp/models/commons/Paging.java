@@ -15,7 +15,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class Paging<T> {
 
-    private int pageNo = 1;
+    private int pageNo = 0;
     private int limit = 10;
     private String sortBy = "createdOn";
     private Sort.Direction sortOrder = Sort.Direction.DESC;
