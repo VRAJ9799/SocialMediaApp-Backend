@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/posts")
-@CrossOrigin("*")
+@CrossOrigin(origins = "*")
 public class PostController {
 
     private final PostService _postService;
@@ -59,8 +59,8 @@ public class PostController {
     @PostMapping("/create-post")
     public ResponseEntity<?> createPost(@Valid @RequestBody @ModelAttribute CreatePostDto createPostDto) {
         PostDto post = _postService.createPost(createPostDto);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
-                .path("/{post_id}")
+        URI uri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/posts/{post_id}")
                 .buildAndExpand(post.getId())
                 .toUri();
         ApiResponse<URI> apiResponse = new ApiResponse<>(uri);

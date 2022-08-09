@@ -11,4 +11,5 @@ public interface UserTokenService {
 
     boolean verifyEmailVerificationToken(String token, Long id);
 
+    boolean deleteRefreshToken(String token);
 }

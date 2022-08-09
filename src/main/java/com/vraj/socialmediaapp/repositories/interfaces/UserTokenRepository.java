@@ -14,7 +14,7 @@ public interface UserTokenRepository extends JpaRepository<UserToken, Long> {
     @Query("select id from UserToken where expireOn < current_timestamp ")
     Set<Long> findAllByExpired();
 
-    Optional<UserToken> findUserTokenByUserId(Long id);
+    Optional<UserToken> findByToken(String token);
 
     Optional<UserToken> findUserTokenByTokenAndUserId(String token, Long userId);
 

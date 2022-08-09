@@ -2,6 +2,7 @@ package com.vraj.socialmediaapp.helpers;
 
 import com.sendgrid.Method;
 import com.sendgrid.Request;
+import com.sendgrid.Response;
 import com.sendgrid.SendGrid;
 import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
@@ -48,10 +49,10 @@ public class EmailHelper {
             request.setMethod(Method.POST);
             request.setEndpoint("mail/send");
             request.setBody(mail.build());
-//            Response response = _sendgrid.api(request);
-//            if (response.getStatusCode() != HttpStatus.ACCEPTED.value()) {
-//                throw new StatusException("Error while sending mail.", HttpStatus.INTERNAL_SERVER_ERROR);
-//            }
+            Response response = _sendgrid.api(request);
+            if (response.getStatusCode() != HttpStatus.ACCEPTED.value()) {
+                throw new StatusException("Error while sending mail.", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
         } catch (Exception exception) {
             throw new StatusException("Error while sending mail.", HttpStatus.INTERNAL_SERVER_ERROR);
         }

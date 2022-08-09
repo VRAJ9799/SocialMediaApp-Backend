@@ -2,6 +2,7 @@ package com.vraj.socialmediaapp.repositories;
 
 import com.vraj.socialmediaapp.dtos.PostDto;
 import com.vraj.socialmediaapp.dtos.UserDto;
+import com.vraj.socialmediaapp.exceptions.StatusException;
 import com.vraj.socialmediaapp.models.commons.Paging;
 import com.vraj.socialmediaapp.models.entities.Post;
 import com.vraj.socialmediaapp.models.entities.User;
@@ -18,6 +19,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.support.PageableExecutionUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
@@ -66,6 +68,7 @@ public class PostRepositoryImpl implements PostRepository {
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(postId));
         Post post = _mongoTemplate.findOne(query, Post.class);
+        if (post == null) throw new StatusException("Post doesn't exist.", HttpStatus.NOT_FOUND);
         PostDto postDto = _modelMapper.map(post, PostDto.class);
         return postDto;
     }
@@ -73,6 +76,7 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     public List<UserDto> getPostLikes(String postId) {
         Post post = _mongoTemplate.findById(postId, Post.class);
+        if (post == null) throw new StatusException("Post doesn't exist.", HttpStatus.NOT_FOUND);
         List<User> users = _userRepository.findByIdIn(post.getLikedBy());
         List<UserDto> userDtos = users.stream().filter(u -> !u.isDeleted()).map(u -> _modelMapper.map(u, UserDto.class)).collect(Collectors.toList());
         return userDtos;

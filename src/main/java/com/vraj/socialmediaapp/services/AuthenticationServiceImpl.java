@@ -75,6 +75,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             userDetails = (UserDetails) authentication.getPrincipal();
             _userService.updateLockedOutAttempt(0, userDetails.getUsername(), false);
         } catch (BadCredentialsException badCredentialsException) {
+            if (userDetails == null) {
+                throw new StatusException("Invalid Email or Password.", HttpStatus.BAD_REQUEST);
+            }
             UserDto user = _userService.getUserByEmail(userDetails.getUsername());
             if (user.isLockedOut()) {
                 throw new StatusException("Your account is locked because of wrong attempts. Please try again after some-time.", HttpStatus.BAD_REQUEST);

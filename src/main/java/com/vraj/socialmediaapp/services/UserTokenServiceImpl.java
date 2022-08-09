@@ -105,5 +105,14 @@ public class UserTokenServiceImpl implements UserTokenService {
         return true;
     }
 
+    @Override
+    public boolean deleteRefreshToken(String token) {
+        Optional<UserToken> userToken = _userTokenRepository.findByToken(token);
+        if (userToken.isEmpty()) {
+            return false;
+        }
+        _userTokenRepository.delete(userToken.get());
+        return true;
+    }
 
 }

@@ -14,7 +14,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/posts/{post_id}/comments")
-@CrossOrigin("*")
+@CrossOrigin(origins = "*")
 public class CommentController {
 
     private final CommentService _commentService;

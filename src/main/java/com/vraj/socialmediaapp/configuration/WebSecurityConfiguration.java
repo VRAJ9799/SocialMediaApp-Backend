@@ -41,10 +41,8 @@ public class WebSecurityConfiguration {
         authenticationManagerBuilder.userDetailsService(_userDetailsService).passwordEncoder(_passwordEncoder);
         // Get AuthenticationManager
         AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
-
+        http.cors();
         http
-                .cors()
-                .and()
                 .csrf()
                 .disable()
                 .sessionManagement()

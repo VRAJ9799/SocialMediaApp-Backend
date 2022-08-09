@@ -3,14 +3,14 @@ package com.vraj.socialmediaapp.models.entities;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.IndexDirection;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
 import java.util.HashSet;
@@ -40,10 +40,13 @@ public class Post {
     @Field(name = "deleted")
     private boolean isDeleted;
 
-    @CreationTimestamp
+    @CreatedDate
+    @Temporal(TemporalType.TIMESTAMP)
+    @Indexed(direction = IndexDirection.DESCENDING)
     private Date createdOn;
 
     @LastModifiedDate
+    @Temporal(TemporalType.TIMESTAMP)
     private Date lastModifiedOn;
 
     // Methods

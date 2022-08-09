@@ -1,7 +1,5 @@
 package com.vraj.socialmediaapp.dtos;
 
-import com.fasterxml.jackson.annotation.JsonIncludeProperties;
-import com.vraj.socialmediaapp.models.entities.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,15 +21,15 @@ public class UserDto {
 
     private String email;
 
-    @JsonIncludeProperties(value = {"id", "name"})
-    private Role role;
+    private long role;
 
     private boolean isLockedOut;
+
     private int lockedOutAttempt;
 
     private boolean isEmailVerified;
 
-    private boolean isDeleted;
+    //private boolean isDeleted;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdOn;

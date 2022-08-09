@@ -2,9 +2,9 @@ package com.vraj.socialmediaapp;
 
 import com.cloudinary.Cloudinary;
 import com.sendgrid.SendGrid;
+import com.vraj.socialmediaapp.dtos.UserDto;
 import com.vraj.socialmediaapp.helpers.Constants;
-import com.vraj.socialmediaapp.repositories.interfaces.RoleRepository;
-import com.vraj.socialmediaapp.repositories.interfaces.UserRepository;
+import com.vraj.socialmediaapp.models.entities.User;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
@@ -13,10 +13,12 @@ import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -38,15 +40,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
         type = SecuritySchemeType.HTTP,
         in = SecuritySchemeIn.HEADER
 )
+@EnableMongoAuditing
 public class SocialMediaAppApplication {
-
-    private final UserRepository _userRepo;
-    private final RoleRepository _roleRepo;
-
-    public SocialMediaAppApplication(UserRepository userRepo, RoleRepository roleRepo) {
-        _userRepo = userRepo;
-        _roleRepo = roleRepo;
-    }
 
     public static void main(String[] args) {
         log.info("Application is running...");
@@ -55,7 +50,14 @@ public class SocialMediaAppApplication {
 
     @Bean
     public ModelMapper modelMapper() {
-        return new ModelMapper();
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.addMappings(new PropertyMap<User, UserDto>() {
+            @Override
+            protected void configure() {
+                map().setRole(source.getRole().getId());
+            }
+        });
+        return modelMapper;
     }
 
     @Bean

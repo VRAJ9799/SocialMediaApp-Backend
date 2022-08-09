@@ -20,7 +20,7 @@ public class TokenScheduler {
         _userTokenRepository = userTokenRepository;
     }
 
-    @Scheduled(cron = "@hourly")
+    @Scheduled(cron = "${scheduler.token}")
     public void deleteExpiredTokens() {
         log.info("Running deleting expired token on {}.", Instant.now());
         Set<Long> expiredTokens = _userTokenRepository.findAllByExpired();

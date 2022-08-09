@@ -19,7 +19,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin("*")
+@CrossOrigin(origins = "*")
 public class AuthenticationController {
 
     private final AuthenticationService _authenticationService;
@@ -68,6 +68,17 @@ public class AuthenticationController {
         }
         return ResponseEntity.status(apiResponse.getStatus())
                 .body(apiResponse);
+    }
+
+    @PutMapping("/sign-out")
+    public ResponseEntity<?> signOut(@CookieValue(name = Constants.REFRESH_TOKEN) String refreshToken) {
+        boolean isSuccess = _userTokenService.deleteRefreshToken(refreshToken);
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        if (isSuccess)
+            apiResponse.setData("Log out success-full.");
+        else
+            apiResponse.setData("Error while logout.");
+        return ResponseEntity.status(apiResponse.getStatus()).body(apiResponse);
     }
 
     @PutMapping("/refresh-token")
