@@ -159,6 +159,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    @Transactional
     public void emailVerification(boolean isEmailVerified, Long id) {
         Date verifiedOn = null;
         if (isEmailVerified)

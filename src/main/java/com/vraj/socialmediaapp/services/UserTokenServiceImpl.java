@@ -16,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -83,10 +82,12 @@ public class UserTokenServiceImpl implements UserTokenService {
                 user
         );
         _userTokenRepository.save(userToken);
-        URI uri = ServletUriComponentsBuilder
+        String uri = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path("/auth/verify-email?user_id=" + user.getId() + "&token=" + userToken.getToken())
-                .build().toUri();
+                .path("/auth/verify-email")
+                .queryParam("user_id", user.getId())
+                .queryParam("token", userToken.getToken())
+                .build().toUriString();
         EmailModel emailModel = new EmailModel();
         emailModel.setTemplateId(emailTemplates.getEmailVerification());
         emailModel.addTo(user.getEmail());
