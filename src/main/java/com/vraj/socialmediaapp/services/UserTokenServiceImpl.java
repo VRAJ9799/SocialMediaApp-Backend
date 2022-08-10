@@ -85,7 +85,7 @@ public class UserTokenServiceImpl implements UserTokenService {
         _userTokenRepository.save(userToken);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path("/auth/verify-email/user_id=" + user.getId() + "&token=" + userToken.getToken())
+                .path("/auth/verify-email?user_id=" + user.getId() + "&token=" + userToken.getToken())
                 .build().toUri();
         EmailModel emailModel = new EmailModel();
         emailModel.setTemplateId(emailTemplates.getEmailVerification());

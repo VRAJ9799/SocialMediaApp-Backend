@@ -158,6 +158,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return access_token;
     }
 
+    @Override
+    public void emailVerification(boolean isEmailVerified, Long id) {
+        Date verifiedOn = null;
+        if (isEmailVerified)
+            verifiedOn = new Date();
+        _userRepository.updateEmailVerification(isEmailVerified, verifiedOn, id);
+    }
+
 
     @Override
     @Transactional

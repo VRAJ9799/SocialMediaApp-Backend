@@ -21,6 +21,7 @@ public class UserToken {
 
     private String token;
 
+    @Enumerated(EnumType.STRING)
     private TokenType tokenType;
 
     @Temporal(TemporalType.TIMESTAMP)

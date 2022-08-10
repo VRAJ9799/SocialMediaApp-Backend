@@ -31,6 +31,8 @@ public interface UserService {
 
     String generateAccessToken(String email);
 
+    void emailVerification(boolean isEmailVerified, Long id);
+
     void changePassword(ChangePasswordDto changePasswordDto);
 
     void updateLockedOutAttempt(int attempt, String email, boolean isLockedOut);

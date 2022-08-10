@@ -24,6 +24,10 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     List<User> findByIdIn(Collection<Long> userIds);
 
     @Modifying(clearAutomatically = true)
+    @Query("update User u set u.isEmailVerified = :isEmailVerified, u.emailVerifiedOn=:emailVerifiedOn , u.lastModifiedOn=current_timestamp where u.id =:id")
+    void updateEmailVerification(boolean isEmailVerified, Date emailVerifiedOn, Long id);
+
+    @Modifying(clearAutomatically = true)
     @Query("update User u set u.isDeleted = true , u.lastModifiedOn = current_timestamp where u.id = :id")
     void deleteUserById(Long id);
 

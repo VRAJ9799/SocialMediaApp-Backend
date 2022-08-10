@@ -61,4 +61,4 @@ email-templates:
   emailVerification: ${email_verification_template_id}
 
 scheduler:
-  token: ${scheduler_token_expession}
+  token: ${scheduler_token_expression}

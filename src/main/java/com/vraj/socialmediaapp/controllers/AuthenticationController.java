@@ -9,9 +9,11 @@ import com.vraj.socialmediaapp.helpers.CookieHelper;
 import com.vraj.socialmediaapp.models.commons.ApiResponse;
 import com.vraj.socialmediaapp.models.entities.UserToken;
 import com.vraj.socialmediaapp.services.interfaces.AuthenticationService;
+import com.vraj.socialmediaapp.services.interfaces.UserService;
 import com.vraj.socialmediaapp.services.interfaces.UserTokenService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -23,11 +25,14 @@ import javax.validation.Valid;
 public class AuthenticationController {
 
     private final AuthenticationService _authenticationService;
+
+    private final UserService _userService;
     private final UserTokenService _userTokenService;
     private final CookieHelper _cookieHelper;
 
-    public AuthenticationController(AuthenticationService _authenticationService, UserTokenService _userTokenService, CookieHelper _cookieHelper) {
+    public AuthenticationController(AuthenticationService _authenticationService, UserService userService, UserTokenService _userTokenService, CookieHelper _cookieHelper) {
         this._authenticationService = _authenticationService;
+        _userService = userService;
         this._userTokenService = _userTokenService;
         this._cookieHelper = _cookieHelper;
     }
@@ -56,11 +61,12 @@ public class AuthenticationController {
         return ResponseEntity.ok(apiResponse);
     }
 
-    @PutMapping("/verify-email")
+    @PostMapping("/verify-email")
     public ResponseEntity<?> verifyEmail(@RequestParam(name = "user_id") Long userId, @RequestParam(name = "token") String token) {
         boolean isVerified = _userTokenService.verifyEmailVerificationToken(token, userId);
         ApiResponse<String> apiResponse = new ApiResponse<>();
         if (isVerified) {
+            _userService.emailVerification(true, userId);
             apiResponse.setData("Email verified successfully.");
         } else {
             apiResponse.setStatus(HttpStatus.BAD_REQUEST.value());
@@ -70,13 +76,15 @@ public class AuthenticationController {
                 .body(apiResponse);
     }
 
-    @PutMapping("/sign-out")
-    public ResponseEntity<?> signOut(@CookieValue(name = Constants.REFRESH_TOKEN) String refreshToken) {
+    @PostMapping("/sign-out")
+    @PreAuthorize(value = "hasAnyRole('" + Constants.ROLE_PREFIX + Constants.ROLE_USER + "','" + Constants.ROLE_PREFIX + Constants.ROLE_USER + "')")
+    public ResponseEntity<?> signOut(@CookieValue(name = Constants.REFRESH_TOKEN, defaultValue = "") String refreshToken, HttpServletResponse httpServletResponse) {
         boolean isSuccess = _userTokenService.deleteRefreshToken(refreshToken);
         ApiResponse<String> apiResponse = new ApiResponse<>();
-        if (isSuccess)
+        if (isSuccess) {
+            _cookieHelper.addCookie(httpServletResponse, Constants.REFRESH_TOKEN, "", 0);
             apiResponse.setData("Log out success-full.");
-        else
+        } else
             apiResponse.setData("Error while logout.");
         return ResponseEntity.status(apiResponse.getStatus()).body(apiResponse);
     }
